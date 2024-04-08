@@ -248,27 +248,24 @@ const Signup = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
     passReqContainer: {
-        height: 'auto',
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
         borderColor: 'black',
-        borderRadius: 5, 
+        borderRadius: 5,
         padding: 15,
-        width: '80%',
+        marginTop: 10, // Adjust spacing as needed
     },
     passReqText: {
-        width: '100%',
         marginTop: 10,
         fontSize: 13,
-        textAlign: 'left',
     },
     invalidText: {
         color: 'red',
     },
     validText: {
         color: 'green',
-    }
+    },
 })
 
 export default Signup;

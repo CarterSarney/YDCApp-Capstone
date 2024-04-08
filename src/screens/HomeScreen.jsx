@@ -54,7 +54,14 @@ function Home({ navigation }) {
           </TouchableOpacity>
         </View>
 
-        <Button mode='outlined' onPress={handleLogout}>Logout</Button>
+        <Button
+            mode="contained" 
+            onPress={handleLogout}
+            color="#FFFFFF" 
+            labelStyle={{ color: 'black' }} // This sets the text color; adjust as needed
+>
+Logout
+</Button>
 
 
       </View>
@@ -68,18 +75,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    backgroundColor: '#1170FF',
   },
   title: {
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#000000',
+    textAlign: 'center',
   },
   buttonContainer: {
     marginTop: 20,
     marginBottom: 20, 
     alignSelf: 'center',
     padding: 20,
+    
+    
   },
   buttonBlock: {
     marginBottom: 40,

@@ -75,92 +75,94 @@ function ChatList({navigation}) {
                 </View>
             </Modal>
             <FlatList
-                data={chattedUsers}
-                keyExtractor={item => item.id}
-                renderItem={({item}) => (
-                    <TouchableOpacity onPress={() => navigation.navigate('Chat', {name: item.firstname, uid: item.uid})}>
-                        <View style={styles.card}>
-                            <View style={styles.textArea}>
-                                <Text style={styles.nameText}>{item.firstname}</Text>
-                                <Text style={styles.msgContent}>{item.email}</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-                )}
-            />
+    data={chattedUsers}
+    keyExtractor={item => item.id}
+    renderItem={({item}) => (
+        <TouchableOpacity onPress={() => navigation.navigate('Chat', {name: item.firstname, uid: item.uid})}>
+            <View style={styles.card}>
+                <Text style={styles.nameText}>{item.firstname}</Text>
+                <Text style={styles.msgContent}>{item.email}</Text>
+            </View>
+        </TouchableOpacity>
+    )}
+/>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    Contain: {
+
+    container: {
         flex: 1,
-        alignItems: 'center',
+        backgroundColor: '#f5f5f5', // Light grey background for the entire screen
+        padding: 20,
+      },
+      card: {
+        backgroundColor: '#ffffff', // White background for the card
+        paddingVertical: 12, // Vertical padding for spacing
+        paddingHorizontal: 16, // Horizontal padding for content inside the card
+        borderBottomWidth: 1,
+        borderBottomColor: '#eeeeee', // Light border for separation
+        flexDirection: 'row',
+        alignItems: 'center', // Center items in the row
+        marginTop: 8, // Space between cards
+        shadowColor: '#000', // Shadow for iOS
+        shadowOffset: { width: 0, height: 1 }, // Shadow position for iOS
+        shadowOpacity: 0.1, // Shadow opacity for iOS
+        shadowRadius: 1, // Shadow blur radius for iOS
+        elevation: 2, // Elevation for Android
+      },
+      nameText: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333', // Dark grey color for the text
+        padding: 8,
+        borderWidth: 1,
+        borderColor: '#dddddd', // Soft border color
+        borderRadius: 5,
+        backgroundColor: '#f7f7f7', // Light grey background for the name
+        marginTop: 4, // Margin at the top
+        overflow: 'hidden', // Ensures the background doesn't bleed out of the border radius
+      },
+      msgContent: {
+        paddingTop: 5,
+        color: '#666', // Light grey for less emphasis on the message/email
+        fontSize: 14,
+      },
+      input: {
+        width: '100%', // Input field takes the full width of its container
+        padding: 15,
+        marginVertical: 10, // Vertical margin for spacing from other elements
+        borderWidth: 1,
+        borderColor: '#cccccc', // Border color for the input
+        borderRadius: 5,
+        backgroundColor: '#ffffff', // White background for the input field
+      },
+      centeredView: {
+        flex: 1,
         justifyContent: 'center',
-    },
-  Container: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  card: {
-    width: '100%',
-    height: 'auto',
-    marginHorizontal: 4,
-    marginVertical: 6,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  imageContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  userImage: {
-    paddingTop: 15,
-    paddingBottom: 15,
-  },
-  userImageST: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  }, 
-  textArea: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    padding: 5,
-    paddingLeft: 10,
-    width: 300,
-    backgroundColor: 'transparent',
-    borderBottomWidth: 1,
-    borderBottomColor: '#cccccc',
-  },
-  userText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  nameText: {
-    fontSize: 14,
-    fontWeight: '900',
-  },
-  msgTime: {
-    textAlign: 'right',
-    fontSize: 11,
-    marginTop: -20,
-  },
-  msgContent: {
-    paddingTop: 5,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+        alignItems: 'center',
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+      },
+      header: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+      },
 
 })
 
