@@ -29,11 +29,15 @@ function Home({ navigation }) {
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
 
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule', {userEmail, userRole, userUID})}>
-            <Text style={styles.title}>Scheduler</Text>
-          </TouchableOpacity>
-        </View>
+      {(userRole == 'Admin User' || userRole == 'Volunteer User') && (
+          <View style={styles.buttonBlock}>
+            <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule', {userEmail, userRole, userUID})}>
+              <Text style={styles.title}>Scheduler</Text>
+            </TouchableOpacity>
+          </View>
+        )
+
+        }
 
         <View style={styles.buttonBlock}>
           <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Food')}>
