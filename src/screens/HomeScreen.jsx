@@ -48,13 +48,13 @@ function Home({ navigation }) {
 
         <View style={styles.buttonBlock}>
           <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('ChatList')}>
-            <Text style={styles.title}>Chat</Text>
+            <Text style={styles.title}>Contacts</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.buttonBlock}>
           <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Dashboard')}>
-            <Text style={styles.title}>Dashboard</Text>
+            <Text style={styles.title}>Settings</Text>
           </TouchableOpacity>
         </View>
 
