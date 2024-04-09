@@ -1,35 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
-
-// Import the necessary functions from firebase/firestore
+import { View, Text, TextInput, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { Button } from 'react-native-paper';
+import { useNavigation, useRoute, StackActions } from '@react-navigation/native';
+import { signOut } from 'firebase/auth';
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { auth, db } from '../../Firebase/firebaseConfig';
 
 const Dashboard = () => {
-    // State for user fields
+    const navigation = useNavigation();
+    const route = useRoute();
+    
+    // Assuming you're passing these as params, otherwise remove
+    const { userUID, userEmail, userRole } = route.params || {};
+
     const [userDetails, setUserDetails] = useState({
-      email: '',
-      firstName: '',
-      lastName: ''
+        email: '',
+        firstName: '',
+        lastName: ''
     });
 
     const [docId, setDocId] = useState(null);
 
     useEffect(() => {
         const fetchUserData = async () => {
-            const userUID = auth.currentUser?.uid;
-            if (userUID) {
+            if (auth.currentUser) {
                 const userRef = collection(db, 'users');
-                const q1 = query(userRef, where("uid", "==", userUID));
+                const q = query(userRef, where("uid", "==", auth.currentUser.uid));
 
-                getDocs(q1)
-                    .then((snap) => {
-                        if (!snap.empty) {
-                            const docData = snap.docs[0].data();
-                            const docId = snap.docs[0].id;
+                getDocs(q)
+                    .then((snapshot) => {
+                        if (!snapshot.empty) {
+                            const docData = snapshot.docs[0].data();
+                            const docId = snapshot.docs[0].id;
                             setUserDetails({
                                 email: docData.email,
-                                firstName: docData.firstname,
+                                firstName: docData.firstname, // Adjust according to your Firestore field names
                                 lastName: docData.lastname
                             });
                             setDocId(docId);
@@ -38,7 +43,7 @@ const Dashboard = () => {
                         }
                     })
                     .catch(err => {
-                        console.error('Error: ', err);
+                        console.error('Error fetching user data:', err);
                     });
             } else {
                 console.log('No user is logged in.');
@@ -50,105 +55,101 @@ const Dashboard = () => {
 
     const handleSaveChanges = async () => {
         if (docId) {
-            const userRef = doc(db, 'users', docId);
-            updateDoc(userRef, {
+            const userDocRef = doc(db, 'users', docId);
+            updateDoc(userDocRef, {
                 email: userDetails.email,
-                firstname: userDetails.firstName,
+                firstname: userDetails.firstName, // Ensure these field names match your Firestore document
                 lastname: userDetails.lastName
             })
-            .then(() => {
-                Alert.alert('Success', 'Your profile has been updated.');
-            })
+            .then(() => Alert.alert('Success', 'Your profile has been updated.'))
             .catch((error) => {
                 Alert.alert('Error', 'There was a problem updating your profile.');
-                console.error("Error updating document: ", error);
+                console.error("Error updating document:", error);
             });
         }
     };
 
+    const handleLogout = () => {
+        signOut(auth)
+        .then(() => {
+            navigation.dispatch(StackActions.popToTop());
+            console.log('User logged out successfully');
+        })
+        .catch((error) => {
+            console.log('Logout error:', error.message);
+        });
+    };
+
     return (
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.header}>Edit Profile</Text>
-        </View>
-        <View style={styles.profilePicContainer}>
-          <TouchableOpacity>
-            {/* Placeholder for profile image - replace this with <Image> or similar */}
-            <View style={styles.profilePicPlaceholder}>
-              <Text style={styles.profilePicText}>Profile Picture</Text>
+        <View style={styles.container}>
+            <View style={styles.headerContainer}>
+                <Text style={styles.header}>Edit Profile</Text>
             </View>
-          </TouchableOpacity>
+            <View style={styles.formContainer}>
+                <TextInput
+                    value={userDetails.email}
+                    onChangeText={text => setUserDetails(prev => ({ ...prev, email: text }))}
+                    placeholder="Email"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={userDetails.firstName}
+                    onChangeText={text => setUserDetails(prev => ({ ...prev, firstName: text }))}
+                    placeholder="First Name"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={userDetails.lastName}
+                    onChangeText={text => setUserDetails(prev => ({ ...prev, lastName: text }))}
+                    placeholder="Last Name"
+                    style={styles.input}
+                />
+                <Button
+                    mode="contained"
+                    onPress={handleSaveChanges}
+                    style={{ marginBottom: 10, backgroundColor: '#007bff' }} // Bootstrap primary color for example
+                >
+                    Save Changes
+                </Button>
+                <Button
+                    mode="contained"
+                    onPress={handleLogout}
+                    color="#f44336" // Using Material Design's red 500 for logout button
+                >
+                    Logout
+                </Button>
+            </View>
         </View>
-        <View style={styles.formContainer}>
-          <TextInput
-            value={userDetails.email}
-            onChangeText={(text) => setUserDetails({ ...userDetails, email: text })}
-            placeholder="Email"
-            style={styles.input}
-          />
-          <TextInput
-            value={userDetails.firstName}
-            onChangeText={(text) => setUserDetails({ ...userDetails, firstName: text })}
-            placeholder="First Name"
-            style={styles.input}
-          />
-          <TextInput
-            value={userDetails.lastName}
-            onChangeText={(text) => setUserDetails({ ...userDetails, lastName: text })}
-            placeholder="Last Name"
-            style={styles.input}
-          />
-          <Button
-            title="Save Changes"
-            onPress={handleSaveChanges}
-          />
-        </View>
-      </View>
     );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  headerContainer: {
-    marginTop: 50,
-  },
-  profilePicContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  profilePicPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50, // Makes it circular
-    backgroundColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  profilePicText: {
-    textAlign: 'center',
-  },
-  formContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 10,
-    marginBottom: 20,
-    borderRadius: 6,
-    width: '100%',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#f5f5f5',
+    },
+    headerContainer: {
+        marginTop: 50,
+    },
+    formContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+    },
+    header: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        padding: 10,
+        marginBottom: 20,
+        borderRadius: 6,
+        width: '100%',
+    },
 });
 
 export default Dashboard;
