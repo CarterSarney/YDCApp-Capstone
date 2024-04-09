@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Button } from 'react-native-paper';
-import { StackActions, useRoute } from '@react-navigation/native';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../Firebase/firebaseConfig';
-
-
+import { useRoute } from '@react-navigation/native';
 
 function Home({ navigation }) {
   const route = useRoute();
@@ -14,37 +9,23 @@ function Home({ navigation }) {
   const userEmail = route.params.userEmail;
   const userRole = route.params.userRole;
   
-  const handleLogout = () => {
-    signOut(auth)
-      .then(() => {
-        console.log('User: ', userEmail, ' is logging out');
-        navigation.dispatch(StackActions.pop(1))
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }
-  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.buttonContainer}>
 
-      {(userRole == 'Admin User' || userRole == 'Volunteer User') && (
+        {(userRole == 'Admin User' || userRole == 'Volunteer User') && (
           <View style={styles.buttonBlock}>
             <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule', {userEmail, userRole, userUID})}>
               <Text style={styles.title}>Scheduler</Text>
             </TouchableOpacity>
           </View>
-        )
-
-        }
+        )}
 
         <View style={styles.buttonBlock}>
           <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Food')}>
             <Text style={styles.title}>Food Voting</Text>
           </TouchableOpacity>
         </View>
-
 
         <View style={styles.buttonBlock}>
           <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('ChatList')}>
@@ -57,16 +38,6 @@ function Home({ navigation }) {
             <Text style={styles.title}>Settings</Text>
           </TouchableOpacity>
         </View>
-
-        <Button
-            mode="contained" 
-            onPress={handleLogout}
-            color="#FFFFFF" 
-            labelStyle={{ color: 'black' }} // This sets the text color; adjust as needed
->
-Logout
-</Button>
-
 
       </View>
     </SafeAreaView>
@@ -93,8 +64,6 @@ const styles = StyleSheet.create({
     marginBottom: 20, 
     alignSelf: 'center',
     padding: 20,
-    
-    
   },
   buttonBlock: {
     marginBottom: 40,
@@ -102,11 +71,11 @@ const styles = StyleSheet.create({
     width: 250,
     height: 100,
     borderRadius: 15,
-    color: '#000000',
     backgroundColor: '#DDDDDD',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-}});
+  },
+});
 
 export default Home;
