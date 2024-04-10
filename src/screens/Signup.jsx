@@ -17,9 +17,12 @@ const Signup = ({ route, navigation }) => {
     const {email: initialEmail} = route.params;
     const [email, setEmail] = useState(initialEmail);
     const [password, setPassword] = useState('');
+    const [confPassword, setConfPassword] = useState('');
     const [passVisible, setPassVisibile] = useState(false);
+    const [confPassVisible, setConfPassVisible] = useState(false);
     const [passReqVisible, setPassReqVisible] = useState(false);
     const [passErrorVisible, setPassErrorVisible] = useState(false);
+    const [confPassErrorVisible, setConfPassErrorVisible] = useState(false);
     const [firstErrorVisible, setFirstErrorVisible] = useState(false);
     const [lastErrorVisible, setLastErrorVisible] = useState(false);
     const [emailErrorVisible, setEmailErrorVisible] = useState(false);
@@ -89,7 +92,7 @@ const Signup = ({ route, navigation }) => {
     //Creates both the email and password for the user as well as a user collection relating to additional user info
     const handleSignUp = () => {
         //If the inputs look good then create the user
-        if (checkEmail() && checkFirst() && checkLast() && checkPass() && strength >= 2) {
+        if (checkEmail() && checkFirst() && checkLast() && checkPass() && strength >= 2 && confPassword == password) {
             createUserWithEmailAndPassword(auth, email, password)
             .then((cred) => {
                 console.log('Created User:', cred.user);
@@ -144,7 +147,7 @@ const Signup = ({ route, navigation }) => {
                 // style={}
                 placeholder='First Name'
                 autoCapitalize='words'
-                onChangeText={firstname => setFirstName(firstname)}
+                onChangeText={firstname => setFirstName(firstname.charAt(0).toUpperCase() + firstname.slice(1))}
                 error={firstErrorVisible}
                 placeholderTextColor={firstErrorVisible ? 'red' : undefined}
                 onBlur={() => {
@@ -162,7 +165,7 @@ const Signup = ({ route, navigation }) => {
                 // style={}
                 placeholder='Last Name'
                 autoCapitalize='words'
-                onChangeText={lastname => setLastName(lastname)}
+                onChangeText={lastname => setLastName(lastname.charAt(0).toUpperCase() + lastname.slice(1))}
                 error={lastErrorVisible}
                 placeholderTextColor={lastErrorVisible ? 'red' : undefined}
                 onBlur={() => {
@@ -239,6 +242,32 @@ const Signup = ({ route, navigation }) => {
                         <Text style={[styles.passReqText, (!testEmptyString(password) ? (specialCharRegex ? styles.validText : styles.invalidText) : undefined )]}>At least one special character</Text>
                     </View>
                 </View>
+            )}
+            <TextInput
+                secureTextEntry={!confPassVisible}
+                placeholder="Confirm Password"
+                autoCapitalize="none"
+                onChangeText={confPassword => setConfPassword(confPassword)}
+                right={
+                <TextInput.Icon 
+                    icon={!confPassVisible ? "eye" : "eye-off" }
+                    size={20}
+                    color={confPassErrorVisible ? 'red' : undefined}
+                    onPress={() => setConfPassVisible(!confPassVisible)}
+                />
+                }
+                error={confPassErrorVisible}
+                placeholderTextColor={confPassErrorVisible ? 'red' : undefined}
+                onBlur={() => {
+                    if (!(confPassword === password) || confPassword.trim() === '' || confPassword === null) {
+                        setConfPassErrorVisible(true)
+                    } else {
+                        setConfPassErrorVisible(false)
+                    }
+                }}
+            />
+            {confPassErrorVisible && (
+                <HelperText type='error' visible={confPassErrorVisible}>Password does not match!</HelperText>
             )}
             <Button mode='contained' onPress={handleSignUp}>Sign up</Button>
             <Button mode='outlined' onPress={() => navigation.dispatch(StackActions.pop(1))} >Return</Button>
