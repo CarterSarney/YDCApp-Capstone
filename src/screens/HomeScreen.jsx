@@ -1,6 +1,9 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useRoute } from '@react-navigation/native';
+
+// Replace with the correct path to your logo file in the assets directory
+const logo = require('../../assets/images/logo.png'); // Update the path to where your logo is stored
 
 function HomeScreen({ navigation }) {
   const route = useRoute();
@@ -13,14 +16,15 @@ function HomeScreen({ navigation }) {
   // Handle the case when parameters are undefined
   if (!userUID || !userEmail || !userRole) {
     // If any of the parameters are undefined, handle it appropriately here
-    // For example, navigate back to the login screen or display an error
     navigation.navigate('Login');
-    // Return null to prevent rendering the rest of the component
-    return null;
+    return null; // Return null to prevent rendering the rest of the component
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Logo Image */}
+      <Image source={logo} style={styles.logo} />
+      
       <View style={styles.buttonContainer}>
         {(userRole === 'Admin User' || userRole === 'Volunteer User') && (
           <TouchableOpacity 

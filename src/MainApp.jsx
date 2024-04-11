@@ -20,8 +20,13 @@ const MainApp = () => {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Schedule') {
             iconName = focused ? 'calendar' : 'calendar-outline';
-          } // Add more icons for each tab as needed
-          // Return any component that you like here
+          } else if (route.name === 'Food') {
+            iconName = focused ? 'food' : 'food-variant';
+          } else if (route.name === 'ChatList') {
+            iconName = focused ? 'chat' : 'chat-outline';
+          } else if (route.name === 'Dashboard') {
+            iconName = focused ? 'view-dashboard' : 'view-dashboard-outline';
+          }
           return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: 'tomato',
