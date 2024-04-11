@@ -1,51 +1,36 @@
+// App.jsx
 import React from 'react';
-import {
-    Stylesheet,
-    Text,
-    View
-} from 'react-native';
-import Schedule from './src/screens/Schedule';
-import FoodInput from './src/screens/Food';
-import HomePage from './src/screens/HomeScreen';
-import Chat from './src/screens/Chat';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { PaperProvider } from 'react-native-paper';
+
+// Import your authentication screens
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
-import { PaperProvider } from 'react-native-paper';
-import Polling from './src/screens/components/Polling';
-import ChatList from './src/screens/ChatList';
-import Dashboard from './src/screens/Dashboard';
+
+// Import MainApp
+import MainApp from './src/MainApp'; // If MainApp.jsx is directly in the src directory
+
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-
-
-    return (
-          
-        <PaperProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="Login Auth" component={Login}/>
-            <Stack.Screen name="Signup Auth" component={Signup}/>
-            <Stack.Screen name="Youth Drop-In Center" component={HomePage}/>
-            <Stack.Screen name="Schedule" component={Schedule}/>
-            <Stack.Screen name="Food" component={FoodInput}/>
-            <Stack.Screen name="Chat" component={Chat}/>
-            <Stack.Screen name="Polling" component={Polling}/>
-            <Stack.Screen name="ChatList" component={ChatList}/>
-            <Stack.Screen name="Dashboard" component={Dashboard}/>
-
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PaperProvider>
-    );
+  return (
+    <PaperProvider>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="Login Auth" component={Login} />
+          <Stack.Screen name="Signup Auth" component={Signup} />
+          {/* MainApp includes the bottom tab navigation */}
+          <Stack.Screen name="MainApp" component={MainApp} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
+  );
 };
 
 export default App;
