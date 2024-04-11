@@ -40,7 +40,7 @@ function Home({ navigation }) {
         }
 
         <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Food')}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Food', {userRole})}>
             <Text style={styles.title}>Food Voting</Text>
           </TouchableOpacity>
         </View>
@@ -62,7 +62,7 @@ function Home({ navigation }) {
             mode="contained" 
             onPress={handleLogout}
             color="#FFFFFF" 
-            labelStyle={{ color: 'black' }} // This sets the text color; adjust as needed
+            labelStyle={{ color: 'black' }} // This sets the text color
 >
 Logout
 </Button>
