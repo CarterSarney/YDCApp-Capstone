@@ -70,6 +70,8 @@ const Schedule = ({ navigation }) => {
     const [showStartTimePicker, setShowStartTimePicker] = useState(false);
     const [showEndTimePicker, setShowEndTimePicker] = useState(false);
     const [test, setTest] = useState('');
+    //Db Data
+    const [dbData, setDBData] = useState([]);
     //Regex Constants
     const letterSpacesAndNumRegex = /^[a-zA-Z\s0-9]*$/;
 
@@ -373,6 +375,7 @@ const createEvent = async () => {
         onSnapshot(q, (snapshot) => {
             if (!snapshot.empty) {
                 snapshot.forEach((doc) => {
+                    setDBData(doc.data());
                     const volunteers = doc.data().volunteers;
                     if (volunteers) {
                         volunteers.forEach(volunteer => {
@@ -675,118 +678,139 @@ const createEvent = async () => {
                 )}
                     <Modal visible={registerModalStatus} animationType='slide' transparent={true}>
                         <View style={{
-                            flex: 1,
-                            flexDirection: 'column',
                             justifyContent: 'center',
                             alignItems: 'center',
                             backgroundColor: 'rgba(0,0,0,0.5)',
                             paddingTop: 60,
-                            position: 'relative',
+                            height: '100%',
+                            width: '100%',
                         }}>
                             <View style={{
                                 backgroundColor: 'white',
-                                justifyContent: 'bottom',
                                 alignItems: 'center',
                                 padding: 15,
                                 width: '60%',
                                 height: '40%',
                                 borderRadius: 10,
+                                flexDirection: 'column',
+                                gap: 5,
                             }}>
                                 <View style={{
                                     backgroundColor: '#2e2d2b',
-                                    width: 215,
-                                    height: 190,
+                                    width: '110%',
+                                    height: '80%',
                                     borderRadius: 10,
                                     padding: 10,
-                                    position: 'relative',
+                                    flexDirection: 'column',
+                                    gap: 10,
                                 }}>
                                     <View style={{
-                                        backgroundColor: '#f5d142',
-                                        width: 'auto',
-                                        height: 40,
+                                        flexDirection: 'row',
+                                        gap: 10,
+                                    }}>
+                                        <View style={{
+                                            backgroundColor: '#f5d142',
+                                            width: 'auto',
+                                            borderRadius: 10,
+                                            padding: 10,
+                                        }}>
+                                            <Text style={{
+                                                color: 'black',
+                                                fontSize: 15,
+                                                fontWeight: 'bold'
+                                            }}>
+                                                {dbData.eventname}
+                                            </Text>
+                                        </View>
+                                        <View style={{
+                                            backgroundColor: 'white',
+                                            width: 'auto',
+                                            borderRadius: 10,
+                                            padding: 10,
+                                        }}>
+                                            <Text style={{
+                                                color: 'black',
+                                                fontSize: 15,
+                                            }}>
+                                                {dbData.starttime}
+                                            </Text>
+                                        </View>
+                                        <View style={{
+                                            backgroundColor: 'white',
+                                            width: 'auto',
+                                            borderRadius: 10,
+                                            padding: 10,
+                                        }}>
+                                            <Text style={{
+                                                color: 'black',
+                                                fontSize: 15,
+                                            }}>
+                                                {dbData.endtime}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <ScrollView centerContent={true} scrollEnabled={true}
+                                    contentContainerStyle={{
+                                        flexDirection: 'row',
+                                        flexWrap: 'wrap',
+                                    }}
+                                    style={{
+                                        backgroundColor: 'white',
+                                        width: '100%',
+                                        height: '60%',
                                         borderRadius: 10,
                                         padding: 10,
-                                        alignSelf: 'flex-start'
                                     }}>
-                                        <Text style={{
-                                            color: 'black',
-                                            fontSize: 15,
-                                            fontWeight: 'bold'
-                                        }}>
-                                            Event_Name
-                                        </Text>
-                                    </View>
+                                            <Text>{dbData.desc}</Text>
+                                    </ScrollView>
                                 </View>
-                                <ScrollView centerContent={true} scrollEnabled={true}
-                                contentContainerStyle={{
-                                    flex:1, 
+                                <View style={{
                                     flexDirection: 'row',
-                                    flexWrap: 'wrap',
-                                }}
-                                style={{
-                                    position: 'absolute',
-                                    backgroundColor: 'white',
-                                    width: 195,
-                                    height: 125,
-                                    borderRadius: 10,
-                                    padding: 10,
-                                    alignSelf: 'flex-start',
-                                    bottom: 85,
-                                    left: 20,
+                                    gap: 10,
                                 }}>
-                                        <Text>Gang</Text>
-                                </ScrollView>
-                                {!userRegister ? 
-                                    (<TouchableOpacity style={[styles.registerBtn, {
-                                        width: 125,
+                                    {!userRegister ? 
+                                        (<TouchableOpacity style={[styles.registerBtn, {
+                                            width: 125,
+                                            height: 50,
+                                            backgroundColor: '#2196F3',
+                                        }]} onPress={volunteerReg}>
+                                            <Text style={{
+                                                color: '#f0efed',
+                                                fontSize: 15,
+                                                fontWeight: 'bold'
+                                            }}>
+                                                Register
+                                            </Text>
+                                        </TouchableOpacity>)
+                                        :
+                                        (<View style={[styles.registerBtn, {
+                                            width: 125,
+                                            height: 50,
+                                            backgroundColor: '#2e2d2b',
+                                        }]}>
+                                            <Text style={{
+                                                color: '#f0efed',
+                                                fontSize: 15,
+                                                fontWeight: 'bold'
+                                            }}>
+                                                Registered
+                                            </Text>
+                                        </View>)
+                                    }
+                                    <TouchableOpacity onPress={closeRegisterModal} style={[styles.registerBtn, {
+                                        backgroundColor: '#f54242',
+                                        width: 75,
                                         height: 50,
-                                        position: 'absolute',
-                                        left: 10,
-                                        bottom: 10,
-                                        backgroundColor: '#2196F3',
-                                    }]} onPress={volunteerReg}>
-                                        <Text style={{
-                                            color: '#f0efed',
-                                            fontSize: 15,
-                                            fontWeight: 'bold'
-                                        }}>
-                                            Register
-                                        </Text>
-                                    </TouchableOpacity>)
-                                    :
-                                    (<View style={[styles.registerBtn, {
-                                        width: 125,
-                                        height: 50,
-                                        position: 'absolute',
-                                        left: 10,
-                                        bottom: 10,
-                                        backgroundColor: '#2e2d2b',
                                     }]}>
                                         <Text style={{
                                             color: '#f0efed',
                                             fontSize: 15,
                                             fontWeight: 'bold'
                                         }}>
-                                            Registered
+                                            Close
                                         </Text>
-                                    </View>)
-                                }
-                                <TouchableOpacity onPress={closeRegisterModal} style={[styles.registerBtn, {
-                                    backgroundColor: '#f54242',
-                                    position: 'absolute',
-                                    width: 75,
-                                    height: 50,
-                                    right: 10,
-                                    bottom: 10,
-                                }]}>
-                                    <Text style={{
-                                        color: '#f0efed',
-                                        fontSize: 15,
-                                        fontWeight: 'bold'
-                                    }}>
-                                        Close
-                                    </Text>
-                                </TouchableOpacity>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
                     </Modal>
