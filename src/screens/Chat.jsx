@@ -27,7 +27,8 @@ const getAllMsg = async () => {
   //chatid is hardcoded for now but will be passed in through props later
     const chatid = receiveUser > currUser ? currUser+ "-" +receiveUser : receiveUser+ "-" +currUser
 
-    //Pulls chat history from DB
+    //Pulls chat history from DB. Uses query to order the messages by time of creation, and immediately updates
+    //the chat history when a new message is sent with onSnapshot
     const q = query(collection(db, 'Chats', chatid,'messages'),orderBy('createdAt', "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => setMessages(
       snapshot.docs.map(doc => ({...doc.data(),createdAt:doc.data().createdAt.toDate()}))

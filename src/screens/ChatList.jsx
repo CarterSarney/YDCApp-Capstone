@@ -11,26 +11,32 @@ function ChatList({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [search, setSearch] = useState('');
 
+
     useEffect(() => {
+        //Starts the check for users
         const fetchUsers = async () => {
             try {
+                //Pulls all users from the database where the first name matches the search
                 const q = query(collection(db, 'users'), where('firstname', '==', search));
                 const querySnapshot = await getDocs(q);
                 const userList = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data(),
                 }));
+                //Sets the users state to the list of users
                 setUsers(userList);
             } catch (error) {
-                console.error('Error fetching user list:', error);
+                console.error('Error finding user list:', error);
             }
         };
-
+        //When the search isn't empty it will fetch the users with whatever search is equal to
         if (search !== '') {
             fetchUsers();
         }
     }, [search, navigation]);
 
+
+    //When a user is selected it will navigate to the chat screen with the user's name and uid
     const handleSelect = (user) => {
         navigation.navigate('Chat', {name: user.firstname, uid: user.uid});
         setChattedUsers(prevUsers => [...prevUsers, user]);
