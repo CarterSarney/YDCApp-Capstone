@@ -23,7 +23,7 @@ function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {/* Logo Image */}
-      <Image source={logo} style={styles.logo} />
+      <Image source={logo} style={styles.logo} resizeMode="contain" />
       
       <View style={styles.buttonContainer}>
         {(userRole === 'Admin User' || userRole === 'Volunteer User') && (
@@ -47,6 +47,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     backgroundColor: 'white',
+  },
+  logo: {
+    width: 400,  // Set a fixed width
+    height: 400, // Set a fixed height
   },
   title: {
     fontSize: 30,
@@ -75,3 +79,4 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
