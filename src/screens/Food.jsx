@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native'; // Import TouchableOpacity
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { StackActions } from '@react-navigation/native';
+
 
 const FoodInput = ({ navigation }) => {
     const [food, setFood] = useState('');
     const [foodList, setFoodList] = useState([]);
-
+    const userRole = 'Admin User'; // This is a placeholder for the user role
     // Function to add food to the database
     const handleAddFood = async () => {
         try {
@@ -35,53 +36,69 @@ const FoodInput = ({ navigation }) => {
     }, []);
 
     // Function to clear the entered options
-    const clearOptions = () => {
-        setFoodList([]);
+    const clearOptions = async () => {
+        const errors = [];
+        for (const foodItem of foodList) {
+            try {
+                await deleteDoc(doc(db, 'food', foodItem.id));
+            } catch (error) {
+                console.error(`Error removing food item with ID ${foodItem.id}: `, error);
+                errors.push(foodItem.id);
+            }
+        }
+        if (errors.length === 0) {
+            setFoodList([]);
+            console.log('All food items successfully removed from Firestore');
+        } else {
+            console.error('Some items could not be removed. See errors above.');
+            const remainingItems = foodList.filter(item => errors.includes(item.id));
+            setFoodList(remainingItems);
+        }
     };
 
-    return (
-        <View style={styles.container}>
-            <TextInput   
-                style={styles.input}
-                placeholder="Enter food here"
-                value={food}
-                onChangeText={setFood}
-                placeholderTextColor="#6B7280" 
-            />
-            <TouchableOpacity style={styles.button} onPress={handleAddFood}>
-                <Text style={styles.buttonText}>Enter Your Suggestion!</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.buttonBlockTwo} onPress={() => {
-    const recentOptions = foodList.slice(0, 3);
-    navigation.navigate('Polling', { recentOptions: recentOptions });
-}}>
-    <Text style={styles.buttonText}>Polling</Text>
-</TouchableOpacity>
-           
-            
-            <FlatList
-                data={foodList}
-                keyExtractor={item => item.id}
-                renderItem={({ item }) => (
-                    <View style={styles.listItem}>
-                        <Text style={styles.listItemText}>{item.name}</Text>
-                    </View>
+    
+        return (
+            <View style={styles.container}>
+                {userRole === 'Admin User' && (
+                    <>
+                        <TextInput   
+                            style={styles.input}
+                            placeholder="Enter food here"
+                            value={food}
+                            onChangeText={setFood}
+                            placeholderTextColor="#6B7280" 
+                        />
+                        <TouchableOpacity style={styles.button} onPress={handleAddFood}>
+                            <Text style={styles.buttonText}>Enter Your Suggestion!</Text>
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity style={styles.buttonBlockTwo} onPress={() => {
+                            const recentOptions = foodList.slice(0, 3);
+                            navigation.navigate('Polling', { recentOptions: recentOptions });
+                        }}>
+                            <Text style={styles.buttonText}>Polling</Text>
+                        </TouchableOpacity>
+                        
+                        <FlatList
+                            data={foodList}
+                            keyExtractor={item => item.id}
+                            renderItem={({ item }) => (
+                                <View style={styles.listItem}>
+                                    <Text style={styles.listItemText}>{item.name}</Text>
+                                </View>
+                            )}
+                        />
+        
+                        <TouchableOpacity style={styles.clearButton} onPress={clearOptions}>
+                            <Text style={styles.clearButtonText}>Clear Options</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.returnButton} onPress={() => navigation.dispatch(StackActions.pop(1))}>
+                            <Text style={styles.returnButtonText}>Return</Text>
+                        </TouchableOpacity>
+                    </>
                 )}
-            />
-
-
-
-
-
-            <TouchableOpacity style={styles.clearButton} onPress={clearOptions}>
-                <Text style={styles.clearButtonText}>Clear Options</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.returnButton} onPress={() => navigation.dispatch(StackActions.pop(1))}>
-                <Text style={styles.returnButtonText}>Return</Text>
-            </TouchableOpacity>
-        </View>
-    );
+            </View>
+        );
 };
 
 const styles = StyleSheet.create({
@@ -97,8 +114,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center', // Center the button in the view
         width: '90%', // Use a width that fits the screen
     },
-    
-    
     
     container: {
         flex: 1,
