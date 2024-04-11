@@ -34,7 +34,7 @@ function Home({ navigation }) {
         </View>
 
         <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('ChatList')}>
+          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('ChatList', {userUID})}>
             <Text style={styles.title}>Contacts</Text>
           </TouchableOpacity>
         </View>

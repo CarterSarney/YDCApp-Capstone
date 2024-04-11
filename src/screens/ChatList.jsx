@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Modal, TextInput } from 'react-native';
 import { Button, Card } from 'react-native-paper';
+import { collection, getDocs, query, where, arrayUnion, doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '../../Firebase/firebaseConfig';
+import { useRoute } from '@react-navigation/native';
 
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../../Firebase/firebaseConfig'; 
-
-function ChatList({navigation}) {
+function ChatList({ navigation }) {
+    const route = useRoute();
+    const userUID = route.params.userUID; // Make sure this param is passed correctly
     const [users, setUsers] = useState([]);
     const [chattedUsers, setChattedUsers] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -14,28 +16,67 @@ function ChatList({navigation}) {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const q = query(collection(db, 'users'), where('firstname', '==', search));
+                const usersRef = collection(db, 'users');
+                const q = query(usersRef, where('firstname', '>=', search), where('firstname', '<=', search + '\uf8ff'));
                 const querySnapshot = await getDocs(q);
-                const userList = querySnapshot.docs.map((doc) => ({
-                    id: doc.id,
+                const userList = querySnapshot.docs.map(doc => ({
+                    uid: doc.id,
                     ...doc.data(),
                 }));
                 setUsers(userList);
             } catch (error) {
-                console.error('Error fetching user list:', error);
+                console.error('Error fetching users:', error);
             }
         };
 
-        if (search !== '') {
-            fetchUsers();
-        }
-    }, [search, navigation]);
+        if (search.trim() !== '') fetchUsers();
+    }, [search]);
 
-    const handleSelect = (user) => {
-        navigation.navigate('Chat', {name: user.firstname, uid: user.uid});
-        setChattedUsers(prevUsers => [...prevUsers, user]);
-        setModalVisible(false);
+
+    useEffect(() => {
+        const fetchSearchHistory = async () => {
+            try {
+                const searchHistoryRef = doc(db, 'ChatHistory', userUID);
+                const docSnap = await getDoc(searchHistoryRef);
+                if (docSnap.exists()) {
+                    const searchedUserIds = docSnap.data().searchedUsers || [];
+                    
+                    const usersDetails = await Promise.all(searchedUserIds.map(async (uid) => {
+                        const userRef = doc(db, 'users', uid);
+                        const userSnap = await getDoc(userRef);
+                        return userSnap.exists() ? { uid, ...userSnap.data() } : null;
+                    }));
+
+                    setChattedUsers(usersDetails.filter(user => user !== null));
+                }
+            } catch (error) {
+                console.error('Error fetching search history:', error);
+            }
+        };
+    
+        fetchSearchHistory();
+    }, [userUID]);
+    
+    const handleSelect = async (user) => {
+        try {
+            const searchHistoryRef = doc(db, 'ChatHistory', userUID);
+            await setDoc(searchHistoryRef, {
+                searchedUsers: arrayUnion(user.uid)
+            }, { merge: true });
+    
+            setChattedUsers(prevUsers => {
+                const exists = prevUsers.some(prevUser => prevUser.uid === user.uid);
+                return exists ? prevUsers : [...prevUsers, user];
+            });
+    
+            setModalVisible(false);
+            navigation.navigate('Chat', { name: user.firstname, uid: user.uid });
+        } catch (error) {
+            console.error('Error updating search history:', error);
+        }
     };
+    
+
 
     return (
         <View style={styles.container}>

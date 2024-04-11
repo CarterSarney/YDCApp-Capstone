@@ -24,7 +24,7 @@ const Chat = ({ navigation, route }) => {
   //get all messages between the current user and receiver
 const getAllMsg = async () => {
 
-  //chatid is hardcoded for now but will be passed in through props later
+  //chatid is passed through proped that create a chatlist by combining the two users' uids
     const chatid = receiveUser > currUser ? currUser+ "-" +receiveUser : receiveUser+ "-" +currUser
 
     //Pulls chat history from DB
