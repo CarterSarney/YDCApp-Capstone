@@ -1,95 +1,94 @@
-import { useState } from 'react';
-import { Text } from 'react-native';
-import { 
-  signInWithEmailAndPassword
-} from 'firebase/auth';
-import { auth, db } from '../../Firebase/firebaseConfig';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React, { useState } from 'react';
+import { Text, SafeAreaView, StyleSheet, Image, View } from 'react-native';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../Firebase/firebaseConfig';
 import { TextInput, Button } from 'react-native-paper';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 
-//Tie information only related to the user to its uuid
+// Import the logo
+const logo = require('../../assets/images/logo.png'); // Update the path accordingly
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [visible, setVisibile] = useState(false);
-
-  //Move Signup to its own page for cleaner interface
-  const handleSignUp = () => {
-    //Sending email if it has been filled to the sign up page to save sign up time if an account does not exist
-    setErrorMessage(null);
-    navigation.navigate('Signup Auth', {email});
-  };
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = () => {
-    //Input validation for email and password
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex = /\s/; //Password input should not contain any spaces
-
-    if (!emailRegex.test(email) || passwordRegex.test(password)) {
-      console.warn('User tried to enter suspicious text in one of the inputs: ', email, ', ', password);
-      setErrorMessage('Invalid email or password input');
-    } else {
-      signInWithEmailAndPassword(auth, email, password)
-      .then(userCred => {
-        setErrorMessage(null);
-        const user = userCred.user;
-        const userUID = user.uid;
-        const userEmail = user.email;
-
-        //User Role check
-        const userRef = collection(db, 'users');
-        const q = query(userRef, where("uid", "==", user.uid));
-
-        getDocs(q)
-          .then((qSnapshot) => {
-            qSnapshot.forEach((doc) => {
-              
-              const userRole = doc.data().role;
-              //console.log(userRole)
-              navigation.navigate('Youth Drop-In Center', {userUID, userEmail, userRole});
-            })
-          })
-          .catch((error) => {
-            console.error('Error: ', error);
-          });
-        ///////////////////////////////////////////////////
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        navigation.navigate('MainApp', {
+          screen: 'Home',
+          params: {
+            userUID: user.uid,
+            userEmail: user.email,
+            userRole: 'Regular User' // Placeholder, replace with actual user role from your DB
+          },
+        });
       })
-      .catch(error => {
+      .catch((error) => {
         setErrorMessage(error.message);
-        console.error('Error when user trying to log in: ', error);
       });
-    }
-
   };
 
   return (
-    <SafeAreaView>
-      {errorMessage && <Text>{errorMessage}</Text>}
-      <TextInput
-        placeholder="Email"
-        autoCapitalize="none"
-        onChangeText={email => setEmail(email)}
-      />
-      <TextInput
-        secureTextEntry={!visible}
-        placeholder="Password"
-        autoCapitalize="none"
-        onChangeText={password => setPassword(password)}
-        right={
-          <TextInput.Icon 
-            icon={!visible ? "eye" : "eye-off" }
-            size={20}
-            onPress={() => setVisibile(!visible)}
-          />
-        }
-      />
-      <Button mode='contained' onPress={handleLogin} >Login</Button>
-      <Button mode='contained' onPress={handleSignUp} >Signup</Button>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Image source={logo} style={styles.logo} />
+      </View>
+      <View style={styles.formContainer}>
+        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+        <TextInput
+          label="Email"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+        />
+        <TextInput
+          label="Password"
+          value={password}
+          secureTextEntry
+          onChangeText={setPassword}
+          autoCapitalize="none"
+        />
+        <Button mode="contained" onPress={handleLogin} style={styles.button}>
+          Login
+        </Button>
+        <Button mode="contained" onPress={() => navigation.navigate('Signup')} style={styles.button}>
+          Sign Up
+        </Button>
+      </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  logoContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 200, // Adjust the margin as needed
+  },
+  formContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 25, // Adjust the margin as needed
+  },
+  logo: {
+    width: 390, // Adjust the width as needed
+    height: 600, // Adjust the height as needed
+    resizeMode: 'contain',
+  },
+  errorText: {
+    color: 'red',
+    alignSelf: 'center',
+  },
+  button: {
+    marginTop: 2, // Add spacing between buttons
+  },
+});
 
 export default Login;

@@ -1,57 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useRoute } from '@react-navigation/native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+// Replace with the correct path to your logo file in the assets directory
+const logo = require('../../assets/images/logo.png'); // Update the path to where your logo is stored
 
-
-
-function Home({ navigation }) {
+function HomeScreen({ navigation }) {
   const route = useRoute();
   
-  const userUID = route.params.userUID;
-  const userEmail = route.params.userEmail;
-  const userRole = route.params.userRole;
-  
+  // Use optional chaining to safely access parameters
+  const userUID = route.params?.userUID;
+  const userEmail = route.params?.userEmail;
+  const userRole = route.params?.userRole;
+
+  // Handle the case when parameters are undefined
+  if (!userUID || !userEmail || !userRole) {
+    // If any of the parameters are undefined, handle it appropriately here
+    navigation.navigate('Login');
+    return null; // Return null to prevent rendering the rest of the component
+  }
+
   return (
     <SafeAreaView style={styles.container}>
+      {/* Logo Image */}
+      <Image source={logo} style={styles.logo} resizeMode="contain" />
+      
       <View style={styles.buttonContainer}>
-
-        {(userRole == 'Admin User' || userRole == 'Volunteer User') && (
-          <View style={styles.buttonBlock}>
-            <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Schedule', {userEmail, userRole, userUID})}>
-              <Text style={styles.title}>Scheduler</Text>
-            </TouchableOpacity>
-          </View>
+        {(userRole === 'Admin User' || userRole === 'Volunteer User') && (
+          <TouchableOpacity 
+            style={styles.buttonBlock} 
+            onPress={() => navigation.navigate('Schedule', { userEmail, userRole, userUID })}
+          >
+            <Text style={styles.title}>Scheduler</Text>
+          </TouchableOpacity>
         )}
-
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Food')}>
-            <Text style={styles.title}>Food Voting</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('ChatList')}>
-            <Text style={styles.title}>Contacts</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonBlock}>
-          <TouchableOpacity style={styles.buttonBlock} onPress={() => navigation.navigate('Dashboard')}>
-            <Text style={styles.title}>Settings</Text>
-          </TouchableOpacity>
-        </View>
-
+        {/* Add other buttons with navigation as needed */}
       </View>
     </SafeAreaView>
   );
 }
-
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -59,7 +46,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#1170FF',
+    backgroundColor: 'white',
+  },
+  logo: {
+    width: 400,  // Set a fixed width
+    height: 400, // Set a fixed height
   },
   title: {
     fontSize: 30,
@@ -70,7 +61,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 20,
-    marginBottom: 20, 
+    marginBottom: 20,
     alignSelf: 'center',
     padding: 20,
   },
@@ -87,4 +78,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default HomeScreen;
+
