@@ -1,16 +1,18 @@
 // src/MainApp.jsx
-import React from 'react';
+import React, { createContext, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import HomePage from './screens/HomeScreen';
+import HomeScreen from './screens/HomeScreen';
 import Schedule from './screens/Schedule';
 import FoodInput from './screens/Food';
 import ChatList from './screens/ChatList';
 import Dashboard from './screens/Dashboard';
+import { auth } from '../Firebase/firebaseConfig';
 
 const Tab = createBottomTabNavigator();
 
-const MainApp = () => {
+const MainApp = async () => {
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -31,13 +33,14 @@ const MainApp = () => {
         },
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
+        headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomePage} />
-      <Tab.Screen name="Schedule" component={Schedule} />
-      <Tab.Screen name="Food" component={FoodInput} />
-      <Tab.Screen name="ChatList" component={ChatList} />
-      <Tab.Screen name="Dashboard" component={Dashboard} />
+      <Tab.Screen name="Home" component={HomeScreen} initialParams={{userEmail, userRole, userUID}}/>
+      <Tab.Screen name="Schedule" component={Schedule} initialParams={{userEmail, userRole, userUID}}/>
+      <Tab.Screen name="Food" component={FoodInput} initialParams={{userEmail, userRole, userUID}}/>
+      <Tab.Screen name="ChatList" component={ChatList} initialParams={{userEmail, userRole, userUID}}/>
+      <Tab.Screen name="Dashboard" component={Dashboard} initialParams={{userEmail, userRole, userUID}}/>
     </Tab.Navigator>
   );
 };

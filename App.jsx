@@ -23,8 +23,8 @@ const App = () => {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="Login Auth" component={Login} />
-          <Stack.Screen name="Signup Auth" component={Signup} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Signup" component={Signup} />
           {/* MainApp includes the bottom tab navigation */}
           <Stack.Screen name="MainApp" component={MainApp} />
         </Stack.Navigator>

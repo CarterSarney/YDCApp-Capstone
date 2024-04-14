@@ -27,7 +27,7 @@ import moment from 'moment';
 /*
     Imports for the database end
 */
-import { db } from '../../Firebase/firebaseConfig'; 
+import { auth, db } from '../../Firebase/firebaseConfig'; 
 import { collection, addDoc, getDocs, onSnapshot, query, where, arrayUnion, updateDoc, doc, documentId } from 'firebase/firestore';
 
 /*
@@ -45,7 +45,6 @@ import uuid from 'react-native-uuid'
 const Schedule = ({ navigation }) => {
     //Route params from login
     const route = useRoute();
-    const userEmail = route.params.userEmail;
     const userRole = route.params.userRole;
     const userUID = route.params.userUID;
     //Databse references
@@ -407,6 +406,7 @@ const createEvent = async () => {
                     <Card.Content>
                         <View style={styles.card}>
                             <Text>{item.name}</Text>
+                            <Text>{item.starttime} - {item.endtime}</Text>
                         </View>
                     </Card.Content>
                 </Card>
@@ -417,7 +417,6 @@ const createEvent = async () => {
     return (
         
         <SafeAreaView style={styles.container}>
-            <Button style={styles.returnBtn} mode='text' onPress={() => navigation.dispatch(StackActions.pop(1))}>Return</Button>
             <Agenda
                 items={items}
                 selected={formatCurrDate}

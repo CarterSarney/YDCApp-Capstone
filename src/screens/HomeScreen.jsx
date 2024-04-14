@@ -9,9 +9,11 @@ function HomeScreen({ navigation }) {
   const route = useRoute();
   
   // Use optional chaining to safely access parameters
-  const userUID = route.params?.userUID;
-  const userEmail = route.params?.userEmail;
-  const userRole = route.params?.userRole;
+  // const userUID = route.params?.userUID;
+  // const userEmail = route.params?.userEmail;
+  // const userRole = route.params?.userRole;
+
+  const { userUID, userEmail, userRole } = route.params ?? {};
 
   // Handle the case when parameters are undefined
   if (!userUID || !userEmail || !userRole) {
@@ -25,7 +27,7 @@ function HomeScreen({ navigation }) {
       {/* Logo Image */}
       <Image source={logo} style={styles.logo} resizeMode="contain" />
       
-      <View style={styles.buttonContainer}>
+      {/* <View style={styles.buttonContainer}>
         {(userRole === 'Admin User' || userRole === 'Volunteer User') && (
           <TouchableOpacity 
             style={styles.buttonBlock} 
@@ -34,8 +36,10 @@ function HomeScreen({ navigation }) {
             <Text style={styles.title}>Scheduler</Text>
           </TouchableOpacity>
         )}
-        {/* Add other buttons with navigation as needed */}
-      </View>
+      </View> */}
+      <Text>
+        {userRole}
+      </Text>
     </SafeAreaView>
   );
 }
