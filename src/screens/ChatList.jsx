@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Modal, TextInput } from 'react-native';
 import { Button, Card } from 'react-native-paper';
+import { ScrollView } from 'react-native';
 
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, addDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from '../../Firebase/firebaseConfig'; 
+import { useRoute } from '@react-navigation/native';
 
 function ChatList({navigation}) {
+    const route = useRoute();
     const [users, setUsers] = useState([]);
     const [chattedUsers, setChattedUsers] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [search, setSearch] = useState('');
 
+    const currentUserId = "8uFBAc4qy5TLQIjNho3TPPPI6hv1";
 
     useEffect(() => {
         //Starts the check for users
@@ -35,17 +39,40 @@ function ChatList({navigation}) {
         }
     }, [search, navigation]);
 
-
-    //When a user is selected it will navigate to the chat screen with the user's name and uid
-    const handleSelect = (user) => {
+    useEffect(() => {
+        const loadChattedUsers = async () => {
+            try {
+                const q = query(collection(doc(db, 'users', currentUserId), 'chattedUsers'));
+                const querySnapshot = await getDocs(q);
+                const chattedUsersList = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                setChattedUsers(chattedUsersList);
+            } catch(e) {
+                console.error('Error loading chatted users:', e);
+            }
+        };
+    
+        loadChattedUsers();
+    }, []);
+    
+    const handleSelect = async (user) => {
         navigation.navigate('Chat', {name: user.firstname, uid: user.uid});
-        setChattedUsers(prevUsers => [...prevUsers, user]);
+        const updatedUsers = [...chattedUsers, user];
+        try {
+            const chattedUsersRef = doc(db, 'users', currentUserId, 'chattedUsers', user.id);
+            await setDoc(chattedUsersRef, user);
+            setChattedUsers(updatedUsers);
+        } catch(e) {
+            console.error('Error saving chatted users:', e);
+        }
         setModalVisible(false);
     };
 
     return (
         <View style={styles.container}>
-            <Button mode="contained" style={{marginTop:50}} onPress={() => setModalVisible(true)}>
+            <Button mode="contained" style={styles.button} onPress={() => setModalVisible(true)}>
                 Search Users
             </Button>
 
@@ -74,7 +101,7 @@ function ChatList({navigation}) {
                                 </TouchableOpacity>
                             )}
                         />
-                        <Button style={{marginTop:100}}onPress={() => setModalVisible(false)}>
+                        <Button style={styles.button} textColor='white' onPress={() => setModalVisible(false)}>
                             Close
                         </Button>
                     </Card>
@@ -100,7 +127,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5', // Light grey background for the entire screen
+        backgroundColor: '#cbdcf5', 
         padding: 20,
       },
       card: {
@@ -117,6 +144,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1, // Shadow opacity for iOS
         shadowRadius: 1, // Shadow blur radius for iOS
         elevation: 2, // Elevation for Android
+      },
+      button: {
+        backgroundColor: '#1170FF',
+        marginTop:50,
       },
       nameText: {
         fontSize: 16,
@@ -163,7 +194,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-      },
+    },
       header: {
         fontSize: 24,
         fontWeight: 'bold',
