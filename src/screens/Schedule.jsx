@@ -42,11 +42,10 @@ import RNDateTimePicker from '@react-native-community/datetimepicker';
 //import uuid from 'react-native-uuid';
 import uuid from 'react-native-uuid'
 
-const Schedule = ({ navigation }) => {
+const Schedule = () => {
     //Route params from login
     const route = useRoute();
-    const userRole = route.params.userRole;
-    const userUID = route.params.userUID;
+    const { userRole, userUID } = route.params;
     //Databse references
     const scheduleRef = collection(db, 'schedule');
     //Items for card
@@ -688,7 +687,7 @@ const createEvent = async () => {
                                 backgroundColor: 'white',
                                 alignItems: 'center',
                                 padding: 15,
-                                width: '60%',
+                                width: 'auto',
                                 height: '40%',
                                 borderRadius: 10,
                                 flexDirection: 'column',
@@ -755,7 +754,7 @@ const createEvent = async () => {
                                     }}
                                     style={{
                                         backgroundColor: 'white',
-                                        width: '100%',
+                                        width: 'auto',
                                         height: '60%',
                                         borderRadius: 10,
                                         padding: 10,
@@ -765,7 +764,7 @@ const createEvent = async () => {
                                 </View>
                                 <View style={{
                                     flexDirection: 'row',
-                                    gap: 10,
+                                    gap: 25,
                                 }}>
                                     {!userRegister ? 
                                         (<TouchableOpacity style={[styles.registerBtn, {
