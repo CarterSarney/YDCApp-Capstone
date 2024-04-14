@@ -11,7 +11,7 @@ import { auth } from '../Firebase/firebaseConfig';
 
 const Tab = createBottomTabNavigator();
 
-const MainApp = async () => {
+const MainApp = () => {
   
   return (
     <Tab.Navigator
@@ -36,11 +36,11 @@ const MainApp = async () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} initialParams={{userEmail, userRole, userUID}}/>
-      <Tab.Screen name="Schedule" component={Schedule} initialParams={{userEmail, userRole, userUID}}/>
-      <Tab.Screen name="Food" component={FoodInput} initialParams={{userEmail, userRole, userUID}}/>
-      <Tab.Screen name="ChatList" component={ChatList} initialParams={{userEmail, userRole, userUID}}/>
-      <Tab.Screen name="Dashboard" component={Dashboard} initialParams={{userEmail, userRole, userUID}}/>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Schedule" component={Schedule} />
+      <Tab.Screen name="Food" component={FoodInput} />
+      <Tab.Screen name="ChatList" component={ChatList} />
+      <Tab.Screen name="Dashboard" component={Dashboard} />
     </Tab.Navigator>
   );
 };
