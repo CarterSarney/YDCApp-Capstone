@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native'; // Import TouchableOpacity
 import { db } from '../../Firebase/firebaseConfig'; 
-import { collection, addDoc, getDocs, doc } from 'firebase/firestore';
+import { collection, addDoc, getDocs,deleteDoc, doc } from 'firebase/firestore';
 import { StackActions, useRoute } from '@react-navigation/native';
 
 
