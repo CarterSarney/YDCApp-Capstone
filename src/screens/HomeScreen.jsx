@@ -37,9 +37,6 @@ function HomeScreen({ navigation }) {
           </TouchableOpacity>
         )}
       </View> */}
-      <Text>
-        Hello 
-      </Text>
     </SafeAreaView>
   );
 }
