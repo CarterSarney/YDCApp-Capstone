@@ -38,7 +38,7 @@ function HomeScreen({ navigation }) {
         )}
       </View> */}
       <Text>
-        {userRole}
+        Hello 
       </Text>
     </SafeAreaView>
   );

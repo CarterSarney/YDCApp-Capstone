@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Modal, TextInput } from 'react-native';
 import { Button, Card } from 'react-native-paper';
 
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, addDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from '../../Firebase/firebaseConfig'; 
+import { useRoute } from '@react-navigation/native';
 
 function ChatList({navigation}) {
+    const route = useRoute();
     const [users, setUsers] = useState([]);
     const [chattedUsers, setChattedUsers] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [search, setSearch] = useState('');
 
+    const currentUserId = "8uFBAc4qy5TLQIjNho3TPPPI6hv1";
 
     useEffect(() => {
         //Starts the check for users
@@ -35,11 +38,34 @@ function ChatList({navigation}) {
         }
     }, [search, navigation]);
 
-
-    //When a user is selected it will navigate to the chat screen with the user's name and uid
-    const handleSelect = (user) => {
+    useEffect(() => {
+        const loadChattedUsers = async () => {
+            try {
+                const q = query(collection(doc(db, 'users', currentUserId), 'chattedUsers'));
+                const querySnapshot = await getDocs(q);
+                const chattedUsersList = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
+                    ...doc.data(),
+                }));
+                setChattedUsers(chattedUsersList);
+            } catch(e) {
+                console.error('Error loading chatted users:', e);
+            }
+        };
+    
+        loadChattedUsers();
+    }, []);
+    
+    const handleSelect = async (user) => {
         navigation.navigate('Chat', {name: user.firstname, uid: user.uid});
-        setChattedUsers(prevUsers => [...prevUsers, user]);
+        const updatedUsers = [...chattedUsers, user];
+        try {
+            const chattedUsersRef = doc(db, 'users', currentUserId, 'chattedUsers', user.id);
+            await setDoc(chattedUsersRef, user);
+            setChattedUsers(updatedUsers);
+        } catch(e) {
+            console.error('Error saving chatted users:', e);
+        }
         setModalVisible(false);
     };
 
