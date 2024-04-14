@@ -120,8 +120,8 @@ const Polling = ({ navigation, route }) => {
 
       {/* Timer controls */}
       <View style={styles.timerControls}>
-        <Button mode='contained' onPress={startTimer}>Start</Button>
-        <Button mode='contained' onPress={stopTimer}>Stop</Button>
+        <Button mode='contained' onPress={startTimer} buttonColor='#1170FF'>Start</Button>
+        <Button mode='contained' onPress={stopTimer} buttonColor='#1170FF'>Stop</Button>
       </View>
 
       {/* Displaying countdown */}
@@ -130,7 +130,7 @@ const Polling = ({ navigation, route }) => {
       </Text>
 
       {/* Clear votes button */}
-      <Button mode='contained' onPress={clearVotes}>Clear Votes</Button>
+      <Button mode='contained' onPress={clearVotes } buttonColor='#1170FF'>Clear Votes</Button>
 
       {/* Displaying options */}
       {recentOptions.map((option, index) => (
@@ -153,7 +153,7 @@ const Polling = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff', 
+    backgroundColor: '#cbdcf5', 
     padding: 20,
   },
   title: {
@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 30, 
     alignSelf: 'center', 
+    marginTop:30,
   },
   buttonBlock: {
     marginBottom: 20,
@@ -211,6 +212,7 @@ const styles = StyleSheet.create({
     width: '60%', 
     alignSelf: 'center', 
     marginBottom: 30, 
+    
   },
   timerText: {
     fontSize: 22,

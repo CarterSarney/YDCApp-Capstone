@@ -93,9 +93,7 @@ const FoodInput = ({ navigation }) => {
                         <TouchableOpacity style={styles.clearButton} onPress={clearOptions}>
                             <Text style={styles.clearButtonText}>Clear Options</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.returnButton} onPress={() => navigation.dispatch(StackActions.pop(1))}>
-                            <Text style={styles.returnButtonText}>Return</Text>
-                        </TouchableOpacity>
+
                     </>
                 )}
                 {userRole == 'Regular User' && (
@@ -119,9 +117,6 @@ const FoodInput = ({ navigation }) => {
                             )}
                         />
  
-                        <TouchableOpacity style={styles.returnButton} onPress={() => navigation.dispatch(StackActions.pop(1))}>
-                            <Text style={styles.returnButtonText}>Return</Text>
-                        </TouchableOpacity>
                     </>
                 )}
             </View>
@@ -140,6 +135,7 @@ const styles = StyleSheet.create({
         marginVertical: 8,
         alignSelf: 'center', // Center the button in the view
         width: '90%', // Use a width that fits the screen
+        marginTop: 20,
     },
     
     
@@ -196,6 +192,7 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'space-between', 
         marginHorizontal: 16,
+        marginTop:50,
     },
     listItemText: {
         color: '#111827', 

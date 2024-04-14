@@ -10,7 +10,7 @@ const Dashboard = () => {
     const navigation = useNavigation();
     const route = useRoute();
     
-    // Assuming you're passing these as params, otherwise remove
+
     const { userUID, userEmail, userRole } = route.params || {};
 
     const [userDetails, setUserDetails] = useState({

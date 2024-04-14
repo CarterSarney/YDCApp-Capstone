@@ -14,14 +14,14 @@ function ChatList({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
     const [search, setSearch] = useState('');
 
-    const currentUserId = "8uFBAc4qy5TLQIjNho3TPPPI6hv1";
+    const { userUID } = route.params;
 
     useEffect(() => {
         //Starts the check for users
         const fetchUsers = async () => {
             try {
                 //Pulls all users from the database where the first name matches the search
-                const q = query(collection(db, 'users'), where('firstname', '==', search));
+                const q = query(collection(db, 'users'), where('firstname', '==', search), where('firstname', '<=', search + '\uf8ff'));
                 const querySnapshot = await getDocs(q);
                 const userList = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
@@ -34,7 +34,7 @@ function ChatList({navigation}) {
             }
         };
         //When the search isn't empty it will fetch the users with whatever search is equal to
-        if (search !== '') {
+        if (search.trim() !== '') {
             fetchUsers();
         }
     }, [search, navigation]);
@@ -42,7 +42,7 @@ function ChatList({navigation}) {
     useEffect(() => {
         const loadChattedUsers = async () => {
             try {
-                const q = query(collection(doc(db, 'users', currentUserId), 'chattedUsers'));
+                const q = query(collection(doc(db, 'users', userUID), 'chattedUsers'));
                 const querySnapshot = await getDocs(q);
                 const chattedUsersList = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
@@ -61,7 +61,7 @@ function ChatList({navigation}) {
         navigation.navigate('Chat', {name: user.firstname, uid: user.uid});
         const updatedUsers = [...chattedUsers, user];
         try {
-            const chattedUsersRef = doc(db, 'users', currentUserId, 'chattedUsers', user.id);
+            const chattedUsersRef = doc(db, 'users', userUID, 'chattedUsers', user.id);
             await setDoc(chattedUsersRef, user);
             setChattedUsers(updatedUsers);
         } catch(e) {

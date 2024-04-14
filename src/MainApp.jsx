@@ -44,7 +44,7 @@ const MainApp = () => {
         <Tab.Screen name="Schedule" component={Schedule} initialParams={{ userRole, userUID }}/>
       )}
       <Tab.Screen name="Food" component={FoodInput} initialParams={{ userRole }}/>
-      <Tab.Screen name="ChatList" component={ChatList} />
+      <Tab.Screen name="ChatList" component={ChatList} initialParams={{userUID}} />
       <Tab.Screen name="Dashboard" component={Dashboard} />
     </Tab.Navigator>
   );
