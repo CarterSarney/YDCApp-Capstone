@@ -115,6 +115,7 @@ const Dashboard = () => {
                     mode="contained"
                     onPress={handleLogout}
                     color="#f44336" // Using Material Design's red 500 for logout button
+                    style={styles.button}
                 >
                     Logout
                 </Button>
@@ -126,7 +127,7 @@ const Dashboard = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#cbdcf5',
     },
     headerContainer: {
         marginTop: 50,
@@ -149,7 +150,12 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 6,
         width: '100%',
+        backgroundColor: 'white'
     },
+    button: {
+        backgroundColor: '#1170FF',
+        marginTop:10,
+      },
 });
 
 export default Dashboard;

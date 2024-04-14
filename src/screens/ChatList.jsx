@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Modal, TextInput } from 'react-native';
 import { Button, Card } from 'react-native-paper';
+import { ScrollView } from 'react-native';
 
 import { collection, getDocs, query, where, addDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from '../../Firebase/firebaseConfig'; 
@@ -71,7 +72,7 @@ function ChatList({navigation}) {
 
     return (
         <View style={styles.container}>
-            <Button mode="contained" style={{marginTop:50}} onPress={() => setModalVisible(true)}>
+            <Button mode="contained" style={styles.button} onPress={() => setModalVisible(true)}>
                 Search Users
             </Button>
 
@@ -100,7 +101,7 @@ function ChatList({navigation}) {
                                 </TouchableOpacity>
                             )}
                         />
-                        <Button style={{marginTop:100}}onPress={() => setModalVisible(false)}>
+                        <Button style={styles.button} textColor='white' onPress={() => setModalVisible(false)}>
                             Close
                         </Button>
                     </Card>
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5', // Light grey background for the entire screen
+        backgroundColor: '#cbdcf5', 
         padding: 20,
       },
       card: {
@@ -143,6 +144,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1, // Shadow opacity for iOS
         shadowRadius: 1, // Shadow blur radius for iOS
         elevation: 2, // Elevation for Android
+      },
+      button: {
+        backgroundColor: '#1170FF',
+        marginTop:50,
       },
       nameText: {
         fontSize: 16,
@@ -189,7 +194,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-      },
+    },
       header: {
         fontSize: 24,
         fontWeight: 'bold',

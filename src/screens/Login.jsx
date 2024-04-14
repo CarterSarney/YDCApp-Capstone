@@ -60,6 +60,7 @@ const Login = ({ navigation }) => {
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
+          style= {{marginBottom: 10}}
         />
         <TextInput
           label="Password"
@@ -67,6 +68,7 @@ const Login = ({ navigation }) => {
           secureTextEntry={!passVisible}
           onChangeText={setPassword}
           autoCapitalize="none"
+          style= {{marginBottom: 10}}
           right={
             <TextInput.Icon 
                 icon={!passVisible ? "eye" : "eye-off" }
@@ -90,6 +92,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
+    backgroundColor: '#cbdcf5',
   },
   logoContainer: {
     flex: 1,
@@ -101,6 +104,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     marginBottom: 25, // Adjust the margin as needed
+    backgroundColor: '#cbdcf5',
   },
   logo: {
     width: 390, // Adjust the width as needed
@@ -113,6 +117,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 2, // Add spacing between buttons
+    backgroundColor: '#1170FF'
   },
 });
 

@@ -31,7 +31,7 @@ const MainApp = () => {
           }
           return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: 'tomato',
+        tabBarActiveTintColor: '#1170FF',
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
       })}

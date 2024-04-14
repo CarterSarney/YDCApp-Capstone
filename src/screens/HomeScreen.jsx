@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#cbdcf5',
   },
   logo: {
     width: 400,  // Set a fixed width

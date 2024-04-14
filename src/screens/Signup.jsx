@@ -142,13 +142,14 @@ const Signup = ({ route, navigation }) => {
     });
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.container}>
             <TextInput
                 // style={}
                 placeholder='First Name'
                 autoCapitalize='words'
                 onChangeText={firstname => setFirstName(firstname.charAt(0).toUpperCase() + firstname.slice(1))}
                 error={firstErrorVisible}
+                style={{marginBottom:15}}
                 placeholderTextColor={firstErrorVisible ? 'red' : undefined}
                 onBlur={() => {
                     if (firstname.trim() === '' || firstname === null) {
@@ -165,6 +166,7 @@ const Signup = ({ route, navigation }) => {
                 // style={}
                 placeholder='Last Name'
                 autoCapitalize='words'
+                style={{marginBottom:15}}
                 onChangeText={lastname => setLastName(lastname.charAt(0).toUpperCase() + lastname.slice(1))}
                 error={lastErrorVisible}
                 placeholderTextColor={lastErrorVisible ? 'red' : undefined}
@@ -186,6 +188,7 @@ const Signup = ({ route, navigation }) => {
                 onChangeText={email => setEmail(email)}
                 value={email}
                 error={emailErrorVisible}
+                style={{marginBottom:15}}
                 placeholderTextColor={emailErrorVisible ? 'red' : undefined}
                 onBlur={() => {
                     if (email.trim() === '' || email === null) {
@@ -203,6 +206,7 @@ const Signup = ({ route, navigation }) => {
                 placeholder="Password"
                 autoCapitalize="none"
                 onChangeText={password => setPassword(password)}
+                style={{marginBottom:15}}
                 right={
                 <TextInput.Icon 
                     icon={!passVisible ? "eye" : "eye-off" }
@@ -248,6 +252,7 @@ const Signup = ({ route, navigation }) => {
                 placeholder="Confirm Password"
                 autoCapitalize="none"
                 onChangeText={confPassword => setConfPassword(confPassword)}
+                style={{marginBottom:15}}
                 right={
                 <TextInput.Icon 
                     icon={!confPassVisible ? "eye" : "eye-off" }
@@ -269,13 +274,17 @@ const Signup = ({ route, navigation }) => {
             {confPassErrorVisible && (
                 <HelperText type='error' visible={confPassErrorVisible}>Password does not match!</HelperText>
             )}
-            <Button mode='contained' onPress={handleSignUp}>Sign up</Button>
-            <Button mode='outlined' onPress={() => navigation.dispatch(StackActions.pop(1))} >Return</Button>
+            <Button mode='contained' onPress={handleSignUp} style={styles.button}>Sign up</Button>
+            <Button mode='outlined' onPress={() => navigation.dispatch(StackActions.pop(1))} style={styles.button} textColor='white'>Return</Button>
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#cbdcf5',
+      },
     passReqContainer: {
         justifyContent: 'center',
         alignItems: 'center',
@@ -295,6 +304,10 @@ const styles = StyleSheet.create({
     validText: {
         color: 'green',
     },
+    button: {
+        marginTop: 7, 
+        backgroundColor: '#1170FF',
+      },
 })
 
 export default Signup;
