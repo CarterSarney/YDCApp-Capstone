@@ -1,5 +1,6 @@
 // src/MainApp.jsx
 import React, { createContext, useState } from 'react';
+import { useRoute } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import HomeScreen from './screens/HomeScreen';
@@ -12,7 +13,9 @@ import { auth } from '../Firebase/firebaseConfig';
 const Tab = createBottomTabNavigator();
 
 const MainApp = () => {
-  
+  const route = useRoute();
+  const { userEmail, userUID, userRole } = route.params;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -36,9 +39,11 @@ const MainApp = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Schedule" component={Schedule} />
-      <Tab.Screen name="Food" component={FoodInput} />
+      <Tab.Screen name="Home" component={HomeScreen} initialParams={{ userRole, userEmail }}/>
+      {(userRole == 'Admin User' || userRole == 'Volunteer User') && (
+        <Tab.Screen name="Schedule" component={Schedule} initialParams={{ userRole, userUID }}/>
+      )}
+      <Tab.Screen name="Food" component={FoodInput} initialParams={{ userRole }}/>
       <Tab.Screen name="ChatList" component={ChatList} />
       <Tab.Screen name="Dashboard" component={Dashboard} />
     </Tab.Navigator>

@@ -31,12 +31,9 @@ const Login = ({ navigation }) => {
             })
 
             navigation.navigate('MainApp', {
-              screen: 'Home',
-              params: {
                 userEmail: email,
                 userUID: uid,
                 userRole: role
-              }
             });
           })
           .catch(err => {

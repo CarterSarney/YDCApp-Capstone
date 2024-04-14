@@ -5,18 +5,17 @@ import { useRoute } from '@react-navigation/native';
 // Replace with the correct path to your logo file in the assets directory
 const logo = require('../../assets/images/logo.png'); // Update the path to where your logo is stored
 
-function HomeScreen({ navigation }) {
-  const route = useRoute();
+function HomeScreen({ route, navigation }) {
   
   // Use optional chaining to safely access parameters
   // const userUID = route.params?.userUID;
   // const userEmail = route.params?.userEmail;
   // const userRole = route.params?.userRole;
 
-  const { userUID, userEmail, userRole } = route.params ?? {};
+  const { userRole, userEmail } = route.params;
 
   // Handle the case when parameters are undefined
-  if (!userUID || !userEmail || !userRole) {
+  if (!userRole || !userEmail) {
     // If any of the parameters are undefined, handle it appropriately here
     navigation.navigate('Login');
     return null; // Return null to prevent rendering the rest of the component
@@ -37,9 +36,6 @@ function HomeScreen({ navigation }) {
           </TouchableOpacity>
         )}
       </View> */}
-      <Text>
-        {userRole}
-      </Text>
     </SafeAreaView>
   );
 }
@@ -50,7 +46,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#cbdcf5',
   },
   logo: {
     width: 400,  // Set a fixed width
