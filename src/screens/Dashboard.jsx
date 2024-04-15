@@ -22,19 +22,22 @@ const Dashboard = () => {
     const [docId, setDocId] = useState(null);
 
     useEffect(() => {
+        //Searches for users in the database that match the current user's UID
         const fetchUserData = async () => {
             if (auth.currentUser) {
                 const userRef = collection(db, 'users');
                 const q = query(userRef, where("uid", "==", auth.currentUser.uid));
 
                 getDocs(q)
+
+                //Maps the user details for the associated UID and displays email, first name, and last name
                     .then((snapshot) => {
                         if (!snapshot.empty) {
                             const docData = snapshot.docs[0].data();
                             const docId = snapshot.docs[0].id;
                             setUserDetails({
                                 email: docData.email,
-                                firstName: docData.firstname, // Adjust according to your Firestore field names
+                                firstName: docData.firstname,
                                 lastName: docData.lastname
                             });
                             setDocId(docId);
@@ -54,13 +57,17 @@ const Dashboard = () => {
     }, []);
 
     const handleSaveChanges = async () => {
+
+        //After the changes are made, the user's profile is updated in the database
         if (docId) {
             const userDocRef = doc(db, 'users', docId);
             updateDoc(userDocRef, {
                 email: userDetails.email,
-                firstname: userDetails.firstName, // Ensure these field names match your Firestore document
+                firstname: userDetails.firstName, 
                 lastname: userDetails.lastName
             })
+
+            //Gives an alert stating that either it was successful or that there was an error
             .then(() => Alert.alert('Success', 'Your profile has been updated.'))
             .catch((error) => {
                 Alert.alert('Error', 'There was a problem updating your profile.');

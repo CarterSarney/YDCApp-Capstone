@@ -40,6 +40,7 @@ function ChatList({navigation}) {
     }, [search, navigation]);
 
     useEffect(() => {
+        //Loads the chatted users from Firebase and maps them to chattedUserList
         const loadChattedUsers = async () => {
             try {
                 const q = query(collection(doc(db, 'users', userUID), 'chattedUsers'));
@@ -57,6 +58,7 @@ function ChatList({navigation}) {
         loadChattedUsers();
     }, []);
     
+    //Allows for after you select a user to chat with it will navigate to the chat screen
     const handleSelect = async (user) => {
         navigation.navigate('Chat', {name: user.firstname, uid: user.uid});
         const updatedUsers = [...chattedUsers, user];
@@ -131,19 +133,19 @@ const styles = StyleSheet.create({
         padding: 20,
       },
       card: {
-        backgroundColor: '#ffffff', // White background for the card
-        paddingVertical: 12, // Vertical padding for spacing
-        paddingHorizontal: 16, // Horizontal padding for content inside the card
+        backgroundColor: '#ffffff', 
+        paddingVertical: 12, 
+        paddingHorizontal: 16, 
         borderBottomWidth: 1,
-        borderBottomColor: '#eeeeee', // Light border for separation
+        borderBottomColor: '#eeeeee', 
         flexDirection: 'row',
-        alignItems: 'center', // Center items in the row
-        marginTop: 8, // Space between cards
-        shadowColor: '#000', // Shadow for iOS
-        shadowOffset: { width: 0, height: 1 }, // Shadow position for iOS
-        shadowOpacity: 0.1, // Shadow opacity for iOS
-        shadowRadius: 1, // Shadow blur radius for iOS
-        elevation: 2, // Elevation for Android
+        alignItems: 'center', 
+        marginTop: 8, 
+        shadowColor: '#000', 
+        shadowOffset: { width: 0, height: 1 }, 
+        shadowOpacity: 0.1,
+        shadowRadius: 1, 
+        elevation: 2, 
       },
       button: {
         backgroundColor: '#1170FF',
@@ -152,28 +154,28 @@ const styles = StyleSheet.create({
       nameText: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#333', // Dark grey color for the text
+        color: '#333', 
         padding: 8,
         borderWidth: 1,
-        borderColor: '#dddddd', // Soft border color
+        borderColor: '#dddddd', 
         borderRadius: 5,
-        backgroundColor: '#f7f7f7', // Light grey background for the name
-        marginTop: 4, // Margin at the top
-        overflow: 'hidden', // Ensures the background doesn't bleed out of the border radius
+        backgroundColor: '#f7f7f7', 
+        marginTop: 4, 
+        overflow: 'hidden', 
       },
       msgContent: {
         paddingTop: 5,
-        color: '#666', // Light grey for less emphasis on the message/email
+        color: '#666', 
         fontSize: 14,
       },
       input: {
-        width: '100%', // Input field takes the full width of its container
+        width: '100%',
         padding: 15,
-        marginVertical: 10, // Vertical margin for spacing from other elements
+        marginVertical: 10, 
         borderWidth: 1,
-        borderColor: '#cccccc', // Border color for the input
+        borderColor: '#cccccc', 
         borderRadius: 5,
-        backgroundColor: '#ffffff', // White background for the input field
+        backgroundColor: '#ffffff',
       },
       centeredView: {
         flex: 1,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native'; // Import TouchableOpacity
+import { View, TextInput, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native'; 
 import { db } from '../../Firebase/firebaseConfig'; 
 import { collection, addDoc, getDocs,deleteDoc, doc } from 'firebase/firestore';
 import { StackActions, useRoute } from '@react-navigation/native';
@@ -9,7 +9,8 @@ const FoodInput = ({ navigation }) => {
     const route = useRoute();
     const [food, setFood] = useState('');
     const [foodList, setFoodList] = useState([]);
-    const userRole = route.params.userRole; // This is a placeholder for the user role
+    const userRole = route.params.userRole; 
+
     // Function to add food to the database
     const handleAddFood = async () => {
         try {
@@ -36,7 +37,7 @@ const FoodInput = ({ navigation }) => {
         fetchFood();
     }, []);
 
-    // Function to clear the entered options
+    // Function to clear the entered options from firebase
     const clearOptions = async () => {
         const errors = [];
         for (const foodItem of foodList) {
@@ -126,15 +127,15 @@ const FoodInput = ({ navigation }) => {
 const styles = StyleSheet.create({
     
     buttonBlockTwo: {
-        backgroundColor: '#34D399', // A different color to make the button stand out
+        backgroundColor: '#34D399',
         paddingVertical: 12,
         paddingHorizontal: 24,
         borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
         marginVertical: 8,
-        alignSelf: 'center', // Center the button in the view
-        width: '90%', // Use a width that fits the screen
+        alignSelf: 'center', 
+        width: '90%', 
         marginTop: 20,
     },
     

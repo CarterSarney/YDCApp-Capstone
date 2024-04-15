@@ -4,8 +4,8 @@ import { useRoute } from '@react-navigation/native';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '../../Firebase/firebaseConfig';
 
-// Replace with the correct path to your logo file in the assets directory
-const logo = require('../../assets/images/logo.png'); // Update the path to where your logo is stored
+
+const logo = require('../../assets/images/logo.png'); 
 
 function HomeScreen({ route, navigation }) {
   
@@ -81,8 +81,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#cbdcf5',
   },
   logo: {
-    width: 400,  // Set a fixed width
-    height: 400, // Set a fixed height
+    width: 400, 
+    height: 400, 
   },
   title: {
     fontSize: 26,
